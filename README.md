@@ -1,15 +1,15 @@
 Trabalho 1 – Prática com Git em Times
 
-Adrielle (AdrielleDewes)
+Adrielle Dornelles Dewes (AdrielleDewes)
 
-Carolina Silva (crlnslvr)
+Carolina Silveira de Oliveira da Silva (crlnslvr)
 
-Lucas Bianchessi (Lucas-LSB04)
+Lucas Sperhacke Bianchessi (Lucas-LSB04)
 
-Maria Eduarda (maduMaciel)
+Maria Eduarda Mendonça Schmidt Maciel (maduMaciel)
 
-Rafael Machado (RafaelMachado99)
+Rafael Teixeira Machado (RafaelMachado99)
 
-Suzan (SuzanStockey)
+Suzan Stockey Pereira (SuzanStockey)
 
 Escola Politécnica – Pontifícia Universidade Católica do Rio Grande do Sul (PUCRS) Avenida Ipiranga, 6681 – Prédio 30 – Bloco C – Sala 101 CEP 90619-900 – Porto Alegre – RS – Brasil
