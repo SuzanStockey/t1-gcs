@@ -17,5 +17,8 @@ public class AcquisitionSystem {
     public void addDepartment(Department department) {
         departments.add(department);
     }
-    // ACABA RAFAEL
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+    
 }
