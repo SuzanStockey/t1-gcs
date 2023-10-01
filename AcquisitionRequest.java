@@ -3,13 +3,19 @@ import java.util.Date;
 import java.util.List;
 
 public class AcquisitionRequest {
+    enum RequestStatus {
+        OPEN,
+        APPROVED,
+        REJECTED,
+        COMPLETED
+    }
     int id;
     User solicitante;
-    Department departamento_solicitante;
+    Department departamento;
     Date data_pedido;
     Date data_termino;
     RequestStatus status;
-    List<RequestItem> itens = new ArrayList<>();
+    List<RequestItem> items = new ArrayList<>();
 
     public AcquisitionRequest(int id, User solicitante) {
         this.id = id;
@@ -18,4 +24,26 @@ public class AcquisitionRequest {
         data_pedido = new Date();
         status = RequestStatus.OPEN;
     }
+
+    public double getTotalAmount() {
+        double total = 0;
+        for (RequestItem item : items) {
+            total += item.getTotal();
+        }
+        return total;
+    }
+
+    public void addItem(RequestItem item) {
+        if (status == RequestStatus.OPEN) {
+            items.add(item);
+        } else {
+            System.out.println(
+                    "Não é possivel adicionar item.");
+        }
+    }
+
+    public boolean canBeDeleted(User user) {
+        return status == RequestStatus.OPEN && user == solicitante;
+    }
+
 }
