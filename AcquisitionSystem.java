@@ -46,4 +46,51 @@ public class AcquisitionSystem {
         }
     }
 
+    public List<AcquisitionRequest> getRequestsBetweenDates(Date startDate, Date endDate) {
+
+
+        List<AcquisitionRequest> requestsBetweenDates = new ArrayList<>();
+
+        for (AcquisitionRequest request : requests) {
+            Date requestDate = request.data_pedido;
+            if (requestDate.after(startDate) && requestDate.before(endDate)) {
+                requestsBetweenDates.add(request);
+            }
+        }
+
+        return requestsBetweenDates;
+    }
+
+    public List<AcquisitionRequest> getRequestsByRequester(User requester) {
+        List<AcquisitionRequest> requestsByRequester = new ArrayList<>();
+
+        for (AcquisitionRequest request : requests) {
+            if (request.solicitante.equals(requester)) {
+                requestsByRequester.add(request);
+            }
+        }
+
+        return requestsByRequester;
+    }
+
+    public List<AcquisitionRequest> getRequestsByItemDescription(String itemDescription) {
+        List<AcquisitionRequest> requestsByItemDescription = new ArrayList<>();
+
+        for (AcquisitionRequest request : requests) {
+            for (RequestItem item : request.items) {
+                if (item.descricao.equalsIgnoreCase(itemDescription)) {
+                    requestsByItemDescription.add(request);
+                    break; // Para não adicionar o mesmo pedido várias vezes
+                }
+            }
+        }
+
+        return requestsByItemDescription;
+    }
+
+
+
+
+
 }
+
