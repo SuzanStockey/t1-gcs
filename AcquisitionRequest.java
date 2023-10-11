@@ -3,12 +3,7 @@ import java.util.Date;
 import java.util.List;
 
 public class AcquisitionRequest {
-    enum RequestStatus {
-        OPEN,
-        APPROVED,
-        REJECTED,
-        COMPLETED
-    }
+    
     int id;
     User solicitante;
     Department departamento;
