@@ -1,9 +1,7 @@
 
-//RAFAEL
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 public class AcquisitionSystem {
     List<Department> departments = new ArrayList<>();
@@ -18,9 +16,11 @@ public class AcquisitionSystem {
     public void addDepartment(Department department) {
         departments.add(department);
     }
+
     public void setCurrentUser(User user) {
         currentUser = user;
     }
+
     public void evaluateRequest(User evaluator, AcquisitionRequest request, RequestStatus status) {
         if (evaluator == null || request == null || status == null) {
             System.out.println("Invalid evaluation.");
@@ -47,7 +47,6 @@ public class AcquisitionSystem {
     }
 
     public List<AcquisitionRequest> getRequestsBetweenDates(Date startDate, Date endDate) {
-
 
         List<AcquisitionRequest> requestsBetweenDates = new ArrayList<>();
 
@@ -88,9 +87,41 @@ public class AcquisitionSystem {
         return requestsByItemDescription;
     }
 
+    public void viewRequestDetails(AcquisitionRequest request) {
+        if (request != null) {
+            System.out.println("Request ID: " + request.id);
+            System.out.println("Requester: " + request.requester.name);
+            System.out.println("Department: " + request.department.name);
+            System.out.println("Request Date: " + request.requestDate);
+            System.out.println("Total Amount: " + request.getTotalAmount());
+            System.out.println("Status: " + request.status);
 
+            // Imprimir detalhes dos itens
+            System.out.println("Items:");
+            for (RequestItem item : request.items) {
+                System.out.println("  Description: " + item.description);
+                System.out.println("  Unit Price: " + item.unitPrice);
+                System.out.println("  Quantity: " + item.quantity);
+                System.out.println("  Total: " + item.getTotal());
+                System.out.println();
+            }
+        } else {
+            System.out.println("Invalid request.");
+        }
+    }
 
+    public void deleteRequest(User user, AcquisitionRequest request) {
+        if (request == null) {
+            System.out.println("Invalid request.");
+            return;
+        }
 
+        if (request.canBeDeleted(user)) {
+            requests.remove(request);
+            System.out.println("Request deleted successfully.");
+        } else {
+            System.out.println("You cannot delete this request.");
+        }
+    }
 
 }
-
