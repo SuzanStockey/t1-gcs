@@ -27,17 +27,17 @@ public class AcquisitionSystem {
             return;
         }
 
-        if (evaluator.type != UserType.ADMINISTRATOR) {
+        if (evaluator.getType() != UserType.ADMINISTRATOR) {
             System.out.println("Only administrators can evaluate requests.");
             return;
         }
 
-        if (request.status.equals(RequestStatus.OPEN)) {
+        if (request.getStatus().equals(RequestStatus.OPEN)) {
             System.out.println("Request has already been evaluated.");
             return;
         }
 
-        request.status = status;
+        request.setStatus(status);
 
         if (status == RequestStatus.APPROVED) {
             System.out.println("Request approved.");
@@ -46,12 +46,40 @@ public class AcquisitionSystem {
         }
     }
 
+    public void createRequest(User requester, Department department, List<RequestItem> items) {
+        if (requester == null || department == null || items == null || items.isEmpty()) {
+            System.out.println("Invalid request.");
+            return;
+        }
+
+        if (requester.getDepartment() != department) {
+            System.out.println("Employee's department must match the request department.");
+            return;
+        }
+
+        double totalAmount = 0;
+        for (RequestItem item : items) {
+            totalAmount += item.getTotal();
+        }
+
+        if (totalAmount > department.getMaxRequestAmount()) {
+            System.out.println("Request amount exceeds department limit.");
+            return;
+        }
+
+        AcquisitionRequest request = new AcquisitionRequest(requests.size() + 1, requester);
+        request.getItems().addAll(items);
+        requests.add(request);
+
+        System.out.println("Request created successfully.");
+    }
+
     public List<AcquisitionRequest> getRequestsBetweenDates(Date startDate, Date endDate) {
 
         List<AcquisitionRequest> requestsBetweenDates = new ArrayList<>();
 
         for (AcquisitionRequest request : requests) {
-            Date requestDate = request.data_pedido;
+            Date requestDate = request.getDataPedido();
             if (requestDate.after(startDate) && requestDate.before(endDate)) {
                 requestsBetweenDates.add(request);
             }
@@ -64,7 +92,7 @@ public class AcquisitionSystem {
         List<AcquisitionRequest> requestsByRequester = new ArrayList<>();
 
         for (AcquisitionRequest request : requests) {
-            if (request.solicitante.equals(requester)) {
+            if (request.getSolicitante().equals(requester)) {
                 requestsByRequester.add(request);
             }
         }
@@ -76,8 +104,8 @@ public class AcquisitionSystem {
         List<AcquisitionRequest> requestsByItemDescription = new ArrayList<>();
 
         for (AcquisitionRequest request : requests) {
-            for (RequestItem item : request.items) {
-                if (item.descricao.equalsIgnoreCase(itemDescription)) {
+            for (RequestItem item : request.getItems()) {
+                if (item.getDescricao().equalsIgnoreCase(itemDescription)) {
                     requestsByItemDescription.add(request);
                     break; // Para não adicionar o mesmo pedido várias vezes
                 }
@@ -89,19 +117,19 @@ public class AcquisitionSystem {
 
     public void viewRequestDetails(AcquisitionRequest request) {
         if (request != null) {
-            System.out.println("Request ID: " + request.id);
-            System.out.println("Requester: " + request.requester.name);
-            System.out.println("Department: " + request.department.name);
-            System.out.println("Request Date: " + request.requestDate);
+            System.out.println("Request ID: " + request.getId());
+            System.out.println("Requester: " + request.getSolicitante().getName());
+            System.out.println("Department: " + request.getDepartamento().getName());
+            System.out.println("Request Date: " + request.getDataPedido());
             System.out.println("Total Amount: " + request.getTotalAmount());
-            System.out.println("Status: " + request.status);
+            System.out.println("Status: " + request.getStatus());
 
             // Imprimir detalhes dos itens
             System.out.println("Items:");
-            for (RequestItem item : request.items) {
-                System.out.println("  Description: " + item.description);
-                System.out.println("  Unit Price: " + item.unitPrice);
-                System.out.println("  Quantity: " + item.quantity);
+            for (RequestItem item : request.getItems()) {
+                System.out.println("  Description: " + item.getDescricao());
+                System.out.println("  Unit Price: " + item.getPrecoUnitario());
+                System.out.println("  Quantity: " + item.getQuantidade());
                 System.out.println("  Total: " + item.getTotal());
                 System.out.println();
             }
@@ -122,6 +150,68 @@ public class AcquisitionSystem {
         } else {
             System.out.println("You cannot delete this request.");
         }
+    }
+
+    public void displayGeneralStatistics() {
+        int totalRequests = requests.size();
+        int approvedRequests = 0;
+        int rejectedRequests = 0;
+
+        for (AcquisitionRequest request : requests) {
+            if (request.getStatus() == RequestStatus.APPROVED) {
+                approvedRequests++;
+            } else if (request.getStatus() == RequestStatus.REJECTED) {
+                rejectedRequests++;
+            }
+        }
+
+        double approvalPercentage = (double) approvedRequests / totalRequests * 100;
+        double rejectionPercentage = (double) rejectedRequests / totalRequests * 100;
+
+        System.out.println("General Statistics:");
+        System.out.println("Total Requests: " + totalRequests);
+        System.out.println("Approved Requests: " + approvedRequests + " (" + approvalPercentage + "%)");
+        System.out.println("Rejected Requests: " + rejectedRequests + " (" + rejectionPercentage + "%)");
+    }
+
+    public void displayLast30DaysStatistics() {
+        Date currentDate = new Date();
+        long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000L; // 30 dias em milissegundos
+        long thirtyDaysAgoInMillis = currentDate.getTime() - thirtyDaysInMillis;
+        Date thirtyDaysAgo = new Date(thirtyDaysAgoInMillis);
+
+        int requestsLast30Days = 0;
+        double totalValueLast30Days = 0;
+
+        for (AcquisitionRequest request : requests) {
+            if (request.getDataPedido().after(thirtyDaysAgo)) {
+                requestsLast30Days++;
+                totalValueLast30Days += request.getTotalAmount();
+            }
+        }
+
+        double averageValueLast30Days = totalValueLast30Days / requestsLast30Days;
+
+        System.out.println("Statistics for the Last 30 Days:");
+        System.out.println("Number of Requests: " + requestsLast30Days);
+        System.out.println("Average Value: " + averageValueLast30Days);
+    }
+
+    public AcquisitionRequest findLargestOpenRequest() {
+        AcquisitionRequest largestOpenRequest = null;
+        double largestAmount = 0;
+
+        for (AcquisitionRequest request : requests) {
+            if (request.getStatus() == RequestStatus.OPEN) {
+                double requestAmount = request.getTotalAmount();
+                if (requestAmount > largestAmount) {
+                    largestAmount = requestAmount;
+                    largestOpenRequest = request;
+                }
+            }
+        }
+
+        return largestOpenRequest;
     }
 
 }

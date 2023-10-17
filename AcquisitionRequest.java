@@ -4,19 +4,19 @@ import java.util.List;
 
 public class AcquisitionRequest {
     
-    int id;
-    User solicitante;
-    Department departamento;
-    Date data_pedido;
-    Date data_termino;
-    RequestStatus status;
-    List<RequestItem> items = new ArrayList<>();
+    private int id;
+    private User solicitante;
+    private Department departamento;
+    private Date dataPedido;
+    private Date dataTermino;
+    private RequestStatus status;
+    private List<RequestItem> items = new ArrayList<>();
 
     public AcquisitionRequest(int id, User solicitante) {
         this.id = id;
         this.solicitante = solicitante;
         departamento = solicitante.getDepartment();
-        data_pedido = new Date();
+        dataPedido = new Date();
         status = RequestStatus.OPEN;
     }
 
@@ -41,4 +41,35 @@ public class AcquisitionRequest {
         return status == RequestStatus.OPEN && user == solicitante;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public User getSolicitante() {
+        return solicitante;
+    }
+
+    public Department getDepartamento() {
+        return departamento;
+    }
+
+    public Date getDataPedido() {
+        return dataPedido;
+    }
+
+    public Date getDataTermino() {
+        return dataTermino;
+    }
+
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
+    public List<RequestItem> getItems() {
+        return items;
+    }
 }

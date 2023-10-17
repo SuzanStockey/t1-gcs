@@ -42,5 +42,23 @@ public class Main {
         system.addUser(employee14);
         // ACABA RAFAEL
 
+        List<RequestItem> requestItems = new ArrayList<>();
+        requestItems.add(new RequestItem("Item 1", 100, 2));
+        requestItems.add(new RequestItem("Item 2", 50, 3));
+
+        system.createRequest(employee1, finance, requestItems);
+        system.evaluateRequest(admin, system.requests.get(0), RequestStatus.APPROVED);
+
+        system.displayGeneralStatistics();
+        system.displayLast30DaysStatistics();
+        system.displayGeneralStatistics();
+
+        AcquisitionRequest largestOpenRequest = system.findLargestOpenRequest();
+        if (largestOpenRequest != null) {
+            System.out.println("Largest Open Request:");
+            system.viewRequestDetails(largestOpenRequest);
+        } else {
+            System.out.println("No open requests found.");
+        }
     }
 }
