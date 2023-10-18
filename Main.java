@@ -42,6 +42,9 @@ public class Main {
         system.addUser(employee14);
         // ACABA RAFAEL
 
+        system.setCurrentUser(employee1);
+
+
         List<RequestItem> requestItems = new ArrayList<>();
         requestItems.add(new RequestItem("Item 1", 100, 2));
         requestItems.add(new RequestItem("Item 2", 50, 3));
